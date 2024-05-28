@@ -1,3 +1,4 @@
+import { connections } from "mongoose";
 import cartModel from "../models/cart.js";
 import productModel from "../models/product.js";
 import ticketModel from "../models/ticket.js";
@@ -27,7 +28,7 @@ export const getCart = async (req, res) => {
 //Ingresar productos al carrito
 export const insertProductCart = async (req, res) => {
     try {
-        if (req.user.rol == "User") {
+        if (req.user.rol == "Admin") {
             const cartId = req.params.cid
             const productId = req.params.pid
             const { quantity } = req.body
@@ -55,6 +56,7 @@ export const insertProductCart = async (req, res) => {
 
 export const createTicket = async (req, res) => {
     try {
+        console.log(req.user)
         const cartId = req.params.cid
         const cart = await cartModel.findById(cartId)
         const prodSinStock = []
@@ -67,25 +69,48 @@ export const createTicket = async (req, res) => {
             })
             
             if (prodSinStock.length == 0) {
-                const totalPrice = cart.products.reduce((a, b) => (a.price * a.quantity) + (b.price * b.quantity), 0)
+             //const totalPrice = cart.products.reduce((a, b) => (a.id_prod.price * a.quantity) + (b.id_price * b.quantity), 0)
+                console.log(cart.products)
+                const aux = [...cart.products]
                 const newTicket = await ticketModel.create({
                     code: crypto.randomUUID(),
                     purchaser: req.user.email,
-                    amount: totalPrice,
+                    amount: 5,
                     products: cart.products
+                })
+                 //Descontar stock de cada uno de los productos
+                 cart.products.forEach(async (prod) => {
+                    /*await productModel.findByIdAndUpdate(prod.id_prod, {
+                        stock: prod.quantity
+                    })*/
+
+                })
+                await cartModel.findByIdAndUpdate(cartId, {
+                    products: []
                 })
                 //Vaciar carrito
                 res.status(200).send(newTicket)
                
             } else {
-                //Retornar productos sin stock
+                console.log(prodSinStock) //[id1, id2, id3]
+                prodSinStock.forEach((prodId) => {
+                    //[{id_prod, quantity, {}...]
+                    cart.products = cart.products.filter(pro => pro.id_prod !== prodId)
+                })
+                await cartModel.findByIdAndUpdate(cartId, {
+                    products: cart.products
+                })
+                res.status(400).send(`Productos sin stock: ${prodSinStock}`)
             }
-
+                //Retornar productos sin stock
+            
         } else {
             res.status(404).send("Carrito NO existe")
+            req.logger.error("Carrito NO Existe")
         }
 
     } catch (e) {
+        console.log(e)
         res.status(500).send(e)
     }
 }

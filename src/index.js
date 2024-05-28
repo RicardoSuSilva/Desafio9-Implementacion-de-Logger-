@@ -14,7 +14,9 @@ import { engine } from 'express-handlebars'
 import { __dirname } from './path.js'
 import { generateRandomProducts } from './controllers/productController.js'
 import { generateRandomUsers } from './controllers/userController.js'
+import { addLogger } from './utils/logger.js'
 
+app.use(addLogger)
 
 //Configuraciones o declaraciones
 const app = express()

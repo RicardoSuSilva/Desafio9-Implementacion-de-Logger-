@@ -39,9 +39,12 @@ export const getProduct = async (req, res) => {
             res.status(200).send(prod)
         else
             res.status(404).send("Producto no existe")
+            req.logger.error("Producto no existe")
     } catch (error) {
         res.status(500).send(`Error interno del servidor al consultar producto: ${error}`)
+        req.logger.error(`Error interno del servidor al consultar producto: ${error}`)
     }
+
 }
 
 export const createProduct = async (req, res) => {
@@ -54,11 +57,13 @@ export const createProduct = async (req, res) => {
             res.status(201).send(mensaje)
         } else {
             res.status(403).send("Usuario no autorizado")
+            req.logger.error("Usuario no autorizado")
         }
 
 
     } catch (error) {
         res.status(500).send(`Error interno del servidor al crear producto: ${error}`)
+        req.logger.error(`Error interno del servidor al crear producto: ${error}`)
     }
 }
 
@@ -71,11 +76,13 @@ export const updateProduct = async (req, res) => {
             res.status(200).send(prod)
         } else {
             res.status(403).send("Usuario no autorizado")
+            req.logger.error("Usuario no autorizado")
         }
 
 
     } catch (error) {
         res.status(500).send(`Error interno del servidor al actualizar producto: ${error}`)
+        req.logger.error(`Error interno del servidor al actualizar producto: ${error}`)
     }
 
 }
@@ -89,12 +96,14 @@ export const deleteProduct = async (req, res) => {
             res.status(200).send(mensaje)
         } else {
             res.status(403).send("Usuario no autorizado")
-        }
+            req.logger.error("Usuario no autorizado")
+    }
+        
 
     } catch (error) {
         res.status(500).send(`Error interno del servidor al eliminar producto: ${error}`)
+        req.logger.error(`Error interno del servidor al eliminar producto: ${error}`)
     }
-
 }
 
 // Genera productos aleatorios carpeta mockings

@@ -7,6 +7,7 @@ export const getUsers = async (req, res) => {
         res.status(200).send(users)
     } catch (e) {
         res.status(500).send("Error al consultar users: ", e)
+        req.logger.error("Error al consultar users: ", e)
     }
 
 }

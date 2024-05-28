@@ -15,6 +15,7 @@ export const login = async (req, res) => {
 
     } catch (e) {
         res.status(500).send("Error al loguear usuario")
+        req.logger.error("Error al loguear usuario")
     }
 }
 
@@ -26,9 +27,11 @@ export const current = async (req, res) => {
             res.status(200).send("Usuario logueado");
         } else {
             res.status(401).send("Usuario no autenticado");
+            req.logger.error("Usuario no autenticado")
         }
     } catch (e) {
         res.status(500).send("Error al verificar usuario actual");
+        req.logger.error("Error al verificar usuario actual")
     }
 }
 
@@ -42,6 +45,8 @@ export const register = async (req, res) => {
 
     } catch (e) {
         res.status(500).send("Error al registrar usuario")
+        req.logger.error("Error al registrar usuario")
+        
     }
 
 }

@@ -27,15 +27,15 @@ const userSchema = new Schema({
         default: "User"
     },
 
-    isLoggedIn: {
+    /*isLoggedIn: {
         type: Boolean, 
         default: false
-      },
+    },
 
-      cart_id: {
+    cart_id: {
         type: Schema.Types.ObjectId,
-        ref: 'carts'
-    }
+        ref: 'carts'*/
+    
 })
 /*Define un middleware pre-save para el modelo userSchema, que se ejecuta antes de guardar un nuevo documento de usuario
 userSchema.pre('save', async function (next) {
